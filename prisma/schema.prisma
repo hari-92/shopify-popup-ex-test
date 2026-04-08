@@ -32,3 +32,39 @@ model Session {
   refreshToken        String?
   refreshTokenExpires DateTime?
 }
+
+enum PopupHook {
+  POST_PURCHASE_SUCCESS
+}
+
+model Popup {
+  id   String @id @default(uuid())
+  shop String
+
+  name     String
+  hook     PopupHook
+  isActive Boolean @default(false)
+  priority Int     @default(0)
+
+  headerTitle      String
+  headerTitleColor String
+  headerShowClose  Boolean @default(true)
+
+  bodyText            String
+  bodyBackgroundColor String
+  bodyTextColor       String
+  bodyActionLabel     String?
+  bodyActionUrl       String?
+
+  footerText      String
+  footerTextColor String
+
+  /// null = không giới hạn; 0 = không hiển thị; >=1 = số lần/ngày/browser
+  frequencyMaxPerDayPerBrowser Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([shop, hook, isActive])
+  @@index([shop, hook, priority, updatedAt])
+}
